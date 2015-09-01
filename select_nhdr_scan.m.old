@@ -1,0 +1,40 @@
+function return_handles = select_nhdr_scan(handles)
+
+
+[filename, pathname, ~] = uigetfile({'*.nhdr;*.nrrd','NRRD file'},...
+          'Select NRRD file for Quality Control',...
+          handles.user_data_path);
+      
+if isequal(filename,0)
+    handles.user_error = true;
+    return_handles = handles;
+    return;
+end
+
+handles.user_volume_name = filename;
+handles.user_data_path = pathname;
+[~, ~, extension] = fileparts(filename);
+
+if ~strcmpi(extension, '.NRRD') && ~strcmpi(extension, '.NHDR')
+   errdlg('Please select a NRRD or NHDR file', 'File Error') 
+end
+
+% If we have a .nrrd, we convert it to .nhdr so that we can load it easily
+if strcmpi(extension, '.NRRD')
+   
+
+    command = ['ConvertBetweenFileFormats ' fullfile(pathname, filename) ' ' fullfile(pathname, strrep(filename, '.nrrd', '.nhdr'))];
+    system(command);
+    filename = strrep(filename, '.nrrd', '.nhdr');
+    handles.user_volume_name = filename;
+
+end
+
+
+set(handles.text_input_file, 'string', fullfile(pathname, filename));
+
+      
+  
+return_handles = handles;
+      
+end
