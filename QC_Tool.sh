@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SCRIPT=$(readlink -m "$(type -p $0)")
+SCRIPTDIR=$(dirname "$SCRIPT")
+
 if [[ $1 == "-h" || $1 == "--help" ]]; then
     echo "Runs matlab Quality Control tool"
     echo "Usage:"
@@ -26,7 +29,7 @@ if [[ $1 == "-h" || $1 == "--help" ]]; then
     echo
     echo " === === === ==="
     echo
-    echo "You can also call the QC Tool from Matlab, simply add /projects/software/QC_Tool/ to the path, and then type"
+    echo "You can also call the QC Tool from Matlab, simply add the repo path to the path, and then type"
     echo "    help launch_QC_Tool "
     echo "This will display the help"
     echo
@@ -34,7 +37,7 @@ if [[ $1 == "-h" || $1 == "--help" ]]; then
 fi
 
 MATLAB="matlab -nosplash -r "
-QC_PATH="/projects/schiz/software/QC_Tool"
+QC_PATH=$SCRIPTDIR
 
 if [[ -z $1 ]]; then
     M_CMD="addpath $QC_PATH; launch_QC_Tool"
